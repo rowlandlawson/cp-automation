@@ -1,0 +1,45 @@
+services:
+  - type: web
+    name: cp-automation-backend
+    runtime: node
+    rootDir: backend
+    plan: starter
+    buildCommand: bun install --frozen-lockfile && bun run prisma:generate && bun run check
+    preDeployCommand: bun run prisma:migrate:deploy
+    startCommand: bun run start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: 22.12.0
+      - key: BUN_VERSION
+        value: 1.2.21
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: CORS_ORIGIN
+        sync: false
+      - key: ADMIN_APP_URL
+        sync: false
+      - key: CLOUDINARY_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+      - key: ADMIN_USERNAME
+        sync: false
+      - key: ADMIN_EMAIL
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: ADMIN_ROLE
+        value: admin
+      - key: PASSWORD_RESET_TOKEN_TTL_MINUTES
+        value: 30
+      - key: PASSWORD_RESET_WEBHOOK_URL
+        sync: false

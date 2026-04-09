@@ -1,0 +1,353 @@
+{
+  "generatedAt": "2026-04-03",
+  "backupReadiness": {
+    "databaseUrlPlaceholderDetected": true,
+    "jwtPlaceholderDetected": true,
+    "cloudinaryPlaceholderDetected": true,
+    "pgDumpInstalled": false
+  },
+  "recommendedAboutDecision": {
+    "selection": "homepage_summary_and_dedicated_about_page",
+    "reason": "The homepage needs a compact trust section, while the business also needs a richer about experience with portrait, story, mission, values, and credibility."
+  },
+  "company": {
+    "name": "CP Automation",
+    "phone": "+234 803 341 7657",
+    "whatsapp": "+234 803 341 7657",
+    "whatsappLink": "https://wa.me/2348033417657",
+    "email": "info@cpautomation.com",
+    "address": "Portharcourt, Nigeria"
+  },
+  "navigation": [
+    "Home",
+    "About",
+    "Products",
+    "Services",
+    "Projects",
+    "Custom Solutions",
+    "Testimonials",
+    "Contact"
+  ],
+  "home": {
+    "hero": {
+      "title": "Life Made Easy With CP Automation",
+      "body": "We provide innovative automation solutions that make your life and business easier. Automate your borehole pumps, security lights, and manual changeovers.",
+      "primaryCta": {
+        "label": "Contact Us Now",
+        "url": "https://wa.me/2348033417657"
+      },
+      "secondaryCta": {
+        "label": "Our Products",
+        "url": "#products"
+      },
+      "stats": [
+        {
+          "label": "Projects Completed",
+          "value": 120
+        },
+        {
+          "label": "Happy Clients",
+          "value": 95
+        },
+        {
+          "label": "Years Experience",
+          "value": 7
+        }
+      ]
+    },
+    "aboutSummary": {
+      "title": "About CP Automation",
+      "subtitle": "Taking your stress away with innovative automation solutions",
+      "missionCard": {
+        "title": "Our Mission",
+        "body": "At CP Automation, we have products that will make your life and that of your business easier. We automate your borehole pumps, security light switches and manual changeovers. Our aim is to take your stress away."
+      },
+      "whyChooseUsCard": {
+        "title": "Why Choose Us",
+        "points": [
+          "Reliable and durable automation products",
+          "Proven track record with 120+ projects completed",
+          "7+ years of industry experience",
+          "95% client satisfaction rate",
+          "Nationwide service across Nigeria"
+        ]
+      }
+    },
+    "productsSection": {
+      "title": "Our Products"
+    },
+    "servicesSection": {
+      "title": "Our Services",
+      "subtitle": "Comprehensive automation solutions for residential and commercial needs"
+    },
+    "projectsSection": {
+      "title": "Our Projects"
+    },
+    "customSolutions": {
+      "title": "Custom Automation Solutions",
+      "subtitle": "Need something specific? We build custom automation devices tailored to your unique requirements",
+      "developmentCard": {
+        "title": "Custom Device Development",
+        "body": "We specialize in creating bespoke automation solutions for unique challenges.",
+        "points": [
+          "Custom circuit design and PCB development",
+          "Specialized automation controllers",
+          "Integration with existing systems",
+          "Prototype development and testing",
+          "Small batch production"
+        ]
+      },
+      "processCard": {
+        "title": "How It Works",
+        "steps": [
+          {
+            "step": 1,
+            "title": "Consultation",
+            "body": "We discuss your specific requirements and challenges"
+          },
+          {
+            "step": 2,
+            "title": "Design & Proposal",
+            "body": "We create a custom solution design and provide a detailed quote"
+          },
+          {
+            "step": 3,
+            "title": "Development",
+            "body": "Our team builds and tests your custom automation device"
+          },
+          {
+            "step": 4,
+            "title": "Installation & Support",
+            "body": "We install the solution and provide ongoing support"
+          }
+        ],
+        "cta": {
+          "label": "Request Custom Solution",
+          "url": "https://wa.me/2348033417657?text=Hi,%20I%20need%20a%20custom%20automation%20solution"
+        }
+      }
+    },
+    "testimonialsSection": {
+      "title": "What Our Clients Say"
+    },
+    "contactCta": {
+      "title": "Ready to Automate Your Space?",
+      "body": "Contact us today to discuss how CP Automation can make your life and business easier. We offer free consultations and quotes.",
+      "actions": [
+        {
+          "label": "Book Consultation",
+          "url": "https://wa.me/2348033417657"
+        }
+      ]
+    }
+  },
+  "products": [
+    {
+      "name": "CP Level Controller",
+      "description": "Automates your borehole sump pumps to prevent water spillages. Features auto start and auto stop functionality.",
+      "features": [
+        "No more water spillages",
+        "Auto start and auto stop",
+        "Relieves operational stress"
+      ],
+      "ctaLabel": "Get Quote",
+      "ctaUrl": "https://wa.me/2348033417657?text=Hi,%20I'm%20interested%20in%20the%20CP%20Level%20Controller"
+    },
+    {
+      "name": "CP Auto Changeover Switch",
+      "description": "Automates your manual changeover switch and turns off your generators automatically.",
+      "features": [
+        "Automates manual changeover",
+        "Turns off generators automatically",
+        "Seamless power transition"
+      ],
+      "ctaLabel": "Get Quote",
+      "ctaUrl": "https://wa.me/2348033417657?text=Hi,%20I'm%20interested%20in%20the%20CP%20Auto%20Changeover%20Switch"
+    },
+    {
+      "name": "CP Auto Timed Switch",
+      "description": "Automates any electronic devices in your home and saves you power.",
+      "features": [
+        "Automates electronic devices",
+        "Saves power consumption",
+        "Configurable timed operations"
+      ],
+      "ctaLabel": "Get Quote",
+      "ctaUrl": "https://wa.me/2348033417657?text=Hi,%20I'm%20interested%20in%20the%20CP%20Auto%20Timed%20Switch"
+    }
+  ],
+  "services": [
+    {
+      "name": "Installation & Setup",
+      "description": "Professional installation of all CP Automation products with thorough testing and client training."
+    },
+    {
+      "name": "Technical Support",
+      "description": "Comprehensive after-sales support and troubleshooting to ensure your automation systems run smoothly."
+    },
+    {
+      "name": "Custom Solutions",
+      "description": "Tailored automation solutions designed to meet your specific residential or commercial requirements."
+    },
+    {
+      "name": "Maintenance",
+      "description": "Regular maintenance services to keep your automation systems operating at peak performance."
+    }
+  ],
+  "projects": [
+    {
+      "title": "Residential Borehole Automation",
+      "location": "Portharcourt",
+      "description": "CP Level Controller Installation",
+      "image": "assets/img/28753.jpg",
+      "responsiveImage": "assets/img/28753-small.jpg"
+    },
+    {
+      "title": "Commercial Power Management",
+      "location": "Abuja",
+      "description": "Auto Changeover System",
+      "image": "assets/img/28752.jpg",
+      "responsiveImage": "assets/img/28752-small.jpg"
+    },
+    {
+      "title": "Timer",
+      "location": "Ibadan",
+      "description": "Can be used to time electric cooker or any other electric device",
+      "image": "assets/img/28748.jpg",
+      "responsiveImage": "assets/img/28748-small.jpg"
+    },
+    {
+      "title": "Generator Auto Shutdown",
+      "location": "Kano",
+      "description": "Commercial Installation",
+      "image": "assets/img/28758.jpg",
+      "responsiveImage": "assets/img/28758-small.jpg"
+    }
+  ],
+  "testimonials": [
+    {
+      "quote": "Good afternoon, yes it is. It is such a breath of fresh air. Thank you.",
+      "author": "Satisfied CP Automation Client",
+      "location": null,
+      "rating": 5
+    },
+    {
+      "quote": "Wow, CP Auto Level controller is helping clients relieve operational stress from their sump pump systems. No more water spillages.",
+      "author": "CP Automation Client Feedback",
+      "location": null,
+      "rating": 5
+    },
+    {
+      "quote": "The auto changeover switch has completely eliminated our generator stress. It works perfectly every time!",
+      "author": "Business Owner",
+      "location": "Abuja",
+      "rating": 5
+    }
+  ],
+  "footer": {
+    "motto": "Life Made Easy",
+    "tagline": "Transforming Nigerian homes and businesses with innovative automation solutions that simplify your daily life.",
+    "companySummary": "Providing cutting-edge automation solutions for Nigerian homes and businesses since 2016. We specialize in borehole pump automation, security light controls, and power management systems.",
+    "quickLinks": ["Home", "About Us", "Products", "Services", "Projects"],
+    "productLinks": [
+      "CP Level Controller",
+      "Auto Changeover Switch",
+      "Auto Timed Switch",
+      "Custom Solutions",
+      "Installation Services"
+    ],
+    "socialLinks": [
+      {
+        "platform": "Facebook",
+        "url": "#"
+      },
+      {
+        "platform": "Twitter",
+        "url": "#"
+      },
+      {
+        "platform": "Instagram",
+        "url": "#"
+      },
+      {
+        "platform": "LinkedIn",
+        "url": "#"
+      },
+      {
+        "platform": "WhatsApp",
+        "url": "https://wa.me/2348033417657"
+      }
+    ]
+  },
+  "mediaInventory": {
+    "used": [
+      "assets/img/logo.jpg",
+      "assets/img/28748.jpg",
+      "assets/img/28748-small.jpg",
+      "assets/img/28752.jpg",
+      "assets/img/28752-small.jpg",
+      "assets/img/28753.jpg",
+      "assets/img/28753-small.jpg",
+      "assets/img/28758.jpg",
+      "assets/img/28758-small.jpg"
+    ],
+    "unused": ["assets/img/28756.jpg"]
+  },
+  "editableSections": [
+    {
+      "key": "site_settings",
+      "recommendedModel": "SiteSettings",
+      "currentlyApiBacked": false
+    },
+    {
+      "key": "home_hero",
+      "recommendedModel": "HomePage",
+      "currentlyApiBacked": false
+    },
+    {
+      "key": "home_about_summary",
+      "recommendedModel": "HomePage",
+      "currentlyApiBacked": false
+    },
+    {
+      "key": "home_products_section",
+      "recommendedModel": "HomePage and Product",
+      "currentlyApiBacked": true
+    },
+    {
+      "key": "home_services_section",
+      "recommendedModel": "HomePage and Service",
+      "currentlyApiBacked": true
+    },
+    {
+      "key": "home_projects_section",
+      "recommendedModel": "HomePage and Project",
+      "currentlyApiBacked": true
+    },
+    {
+      "key": "home_custom_solutions",
+      "recommendedModel": "HomePage or PageSection",
+      "currentlyApiBacked": false
+    },
+    {
+      "key": "home_testimonials_section",
+      "recommendedModel": "HomePage and Testimonial",
+      "currentlyApiBacked": true
+    },
+    {
+      "key": "home_contact_cta",
+      "recommendedModel": "HomePage",
+      "currentlyApiBacked": false
+    },
+    {
+      "key": "about_page",
+      "recommendedModel": "AboutPage",
+      "currentlyApiBacked": false
+    },
+    {
+      "key": "footer",
+      "recommendedModel": "SiteSettings",
+      "currentlyApiBacked": false
+    }
+  ]
+}

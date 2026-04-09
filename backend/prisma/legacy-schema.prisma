@@ -1,0 +1,93 @@
+datasource db {
+  provider = "postgresql"
+}
+
+/// Legacy bridge schema captured before the Phase 2 redesign.
+/// This acts as the "from" state when generating the Phase 3 migration SQL.
+
+model User {
+  id              Int              @id @default(autoincrement())
+  username        String           @unique @db.VarChar(255)
+  email           String           @unique @db.VarChar(255)
+  passwordHash    String           @map("password_hash") @db.VarChar(255)
+  role            String           @default("admin") @db.VarChar(50)
+  isActive        Boolean          @default(true) @map("is_active")
+  createdAt       DateTime         @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt       DateTime         @default(now()) @map("updated_at") @db.Timestamp(6)
+  updatedSections ContentSection[] @relation("ContentSectionUpdatedBy")
+
+  @@index([isActive], map: "idx_users_is_active")
+  @@map("users")
+}
+
+model Project {
+  id            Int      @id @default(autoincrement())
+  title         String   @db.VarChar(255)
+  description   String?  @db.Text
+  location      String?  @db.VarChar(255)
+  imageUrl      String?  @map("image_url") @db.VarChar(500)
+  imagePublicId String?  @map("image_public_id") @db.VarChar(255)
+  orderIndex    Int      @default(0) @map("order_index")
+  isPublished   Boolean  @default(true) @map("is_published")
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt     DateTime @default(now()) @map("updated_at") @db.Timestamp(6)
+
+  @@index([isPublished, orderIndex, createdAt], map: "idx_projects_published_order")
+  @@map("projects")
+}
+
+model Product {
+  id          Int      @id @default(autoincrement())
+  name        String   @db.VarChar(255)
+  description String?  @db.Text
+  features    String?  @db.Text
+  orderIndex  Int      @default(0) @map("order_index")
+  isPublished Boolean  @default(true) @map("is_published")
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt   DateTime @default(now()) @map("updated_at") @db.Timestamp(6)
+
+  @@index([isPublished, orderIndex, createdAt], map: "idx_products_published_order")
+  @@map("products")
+}
+
+model Service {
+  id          Int      @id @default(autoincrement())
+  name        String   @db.VarChar(255)
+  description String?  @db.Text
+  iconName    String?  @map("icon_name") @db.VarChar(100)
+  orderIndex  Int      @default(0) @map("order_index")
+  isPublished Boolean  @default(true) @map("is_published")
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt   DateTime @default(now()) @map("updated_at") @db.Timestamp(6)
+
+  @@index([isPublished, orderIndex, createdAt], map: "idx_services_published_order")
+  @@map("services")
+}
+
+model ContentSection {
+  id            Int      @id @default(autoincrement())
+  sectionName   String   @unique @map("section_name") @db.VarChar(100)
+  content       String?  @db.Text
+  updatedBy     Int?     @map("updated_by")
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt     DateTime @default(now()) @map("updated_at") @db.Timestamp(6)
+  updatedByUser User?    @relation("ContentSectionUpdatedBy", fields: [updatedBy], references: [id])
+
+  @@index([updatedBy], map: "idx_content_sections_updated_by")
+  @@map("content_sections")
+}
+
+model Testimonial {
+  id          Int      @id @default(autoincrement())
+  quote       String   @db.Text
+  author      String?  @db.VarChar(255)
+  location    String?  @db.VarChar(255)
+  rating      Int      @default(5)
+  orderIndex  Int      @default(0) @map("order_index")
+  isPublished Boolean  @default(true) @map("is_published")
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt   DateTime @default(now()) @map("updated_at") @db.Timestamp(6)
+
+  @@index([isPublished, orderIndex, createdAt], map: "idx_testimonials_published_order")
+  @@map("testimonials")
+}
