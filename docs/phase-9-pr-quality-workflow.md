@@ -4,6 +4,18 @@ The repository now includes a first-party GitHub Actions pull request workflow a
 
 A separate staging backend verification workflow now exists at `.github/workflows/staging-backend-verification.yml`.
 
+## Staging Workflow Secrets
+
+The staging backend verification workflow expects these GitHub Actions secrets:
+
+- `STAGING_DATABASE_URL` or `DATABASE_URL`
+- `STAGING_ADMIN_USERNAME`
+- `STAGING_ADMIN_EMAIL`
+- `STAGING_ADMIN_PASSWORD`
+- `STAGING_API_BASE_URL`
+
+If both database secrets exist, `STAGING_DATABASE_URL` wins. The generic `DATABASE_URL` secret is only a fallback so the workflow can still run in simpler repositories that have not split staging secrets yet.
+
 ## What It Does
 
 The workflow runs on:

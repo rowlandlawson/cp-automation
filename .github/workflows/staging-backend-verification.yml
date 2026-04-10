@@ -27,7 +27,7 @@ jobs:
       ADMIN_PASSWORD: ${{ secrets.STAGING_ADMIN_PASSWORD }}
       ADMIN_ROLE: admin
       ADMIN_USERNAME: ${{ secrets.STAGING_ADMIN_USERNAME }}
-      DATABASE_URL: ${{ secrets.STAGING_DATABASE_URL }}
+      DATABASE_URL: ${{ secrets.STAGING_DATABASE_URL || secrets.DATABASE_URL }}
       NODE_ENV: production
       SMOKE_ADMIN_PASSWORD: ${{ secrets.STAGING_ADMIN_PASSWORD }}
       SMOKE_ADMIN_USERNAME: ${{ secrets.STAGING_ADMIN_USERNAME }}
@@ -39,7 +39,7 @@ jobs:
 
       - name: Validate required staging secrets
         run: |
-          test -n "$DATABASE_URL" || (echo "Missing STAGING_DATABASE_URL" && exit 1)
+          test -n "$DATABASE_URL" || (echo "Missing STAGING_DATABASE_URL or DATABASE_URL" && exit 1)
           test -n "$ADMIN_USERNAME" || (echo "Missing STAGING_ADMIN_USERNAME" && exit 1)
           test -n "$ADMIN_EMAIL" || (echo "Missing STAGING_ADMIN_EMAIL" && exit 1)
           test -n "$ADMIN_PASSWORD" || (echo "Missing STAGING_ADMIN_PASSWORD" && exit 1)
