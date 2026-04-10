@@ -62,13 +62,13 @@ Set these values in Render or in `backend/.env` for local/staging work:
 - `SMOKE_ADMIN_USERNAME` (optional)
 - `SMOKE_ADMIN_PASSWORD` (optional)
 
-If you use the GitHub Actions staging backend verification workflow, also create these GitHub Actions secrets:
+If you use the manual GitHub Actions backend verification workflow, also create these GitHub Actions secrets:
 
-- `STAGING_DATABASE_URL` (or fallback `DATABASE_URL`)
-- `STAGING_ADMIN_USERNAME`
-- `STAGING_ADMIN_EMAIL`
-- `STAGING_ADMIN_PASSWORD`
-- `STAGING_API_BASE_URL`
+- `STAGING_DATABASE_URL` or `DATABASE_URL`
+- `STAGING_ADMIN_USERNAME` or `ADMIN_USERNAME`
+- `STAGING_ADMIN_EMAIL` or `ADMIN_EMAIL`
+- `STAGING_ADMIN_PASSWORD` or `ADMIN_PASSWORD`
+- `STAGING_API_BASE_URL` or `SMOKE_API_BASE_URL`
 
 Notes:
 

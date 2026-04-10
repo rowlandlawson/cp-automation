@@ -59,7 +59,7 @@ bun run db:seed:content-sections
 - Production template: `backend/.env.production.example`
 
 Do not commit real secrets. Fill the correct template on the branch or environment where you deploy.
-If you run `.github/workflows/staging-backend-verification.yml`, also create GitHub Actions staging secrets for `STAGING_DATABASE_URL`, `STAGING_ADMIN_USERNAME`, `STAGING_ADMIN_EMAIL`, `STAGING_ADMIN_PASSWORD`, and `STAGING_API_BASE_URL`.
+If you run `.github/workflows/staging-backend-verification.yml` manually, it accepts either staging-prefixed GitHub Actions secrets or generic repo secrets for the database, admin account, and smoke-test API URL.
 
 ## Required External Setup
 

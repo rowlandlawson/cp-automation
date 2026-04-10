@@ -1,13 +1,6 @@
 name: Staging Backend Verification
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - ".github/workflows/staging-backend-verification.yml"
-      - "backend/**"
-      - "render.yaml"
   workflow_dispatch:
 
 concurrency:
@@ -18,32 +11,31 @@ jobs:
   verify-staging-backend:
     name: Verify Staging Backend
     runs-on: ubuntu-latest
-    environment: staging
     defaults:
       run:
         working-directory: backend
     env:
-      ADMIN_EMAIL: ${{ secrets.STAGING_ADMIN_EMAIL }}
-      ADMIN_PASSWORD: ${{ secrets.STAGING_ADMIN_PASSWORD }}
+      ADMIN_EMAIL: ${{ secrets.STAGING_ADMIN_EMAIL || secrets.ADMIN_EMAIL }}
+      ADMIN_PASSWORD: ${{ secrets.STAGING_ADMIN_PASSWORD || secrets.ADMIN_PASSWORD }}
       ADMIN_ROLE: admin
-      ADMIN_USERNAME: ${{ secrets.STAGING_ADMIN_USERNAME }}
+      ADMIN_USERNAME: ${{ secrets.STAGING_ADMIN_USERNAME || secrets.ADMIN_USERNAME }}
       DATABASE_URL: ${{ secrets.STAGING_DATABASE_URL || secrets.DATABASE_URL }}
       NODE_ENV: production
-      SMOKE_ADMIN_PASSWORD: ${{ secrets.STAGING_ADMIN_PASSWORD }}
-      SMOKE_ADMIN_USERNAME: ${{ secrets.STAGING_ADMIN_USERNAME }}
-      SMOKE_API_BASE_URL: ${{ secrets.STAGING_API_BASE_URL }}
+      SMOKE_ADMIN_PASSWORD: ${{ secrets.STAGING_ADMIN_PASSWORD || secrets.ADMIN_PASSWORD }}
+      SMOKE_ADMIN_USERNAME: ${{ secrets.STAGING_ADMIN_USERNAME || secrets.ADMIN_USERNAME }}
+      SMOKE_API_BASE_URL: ${{ secrets.STAGING_API_BASE_URL || secrets.SMOKE_API_BASE_URL }}
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Validate required staging secrets
+      - name: Validate required workflow secrets
         run: |
           test -n "$DATABASE_URL" || (echo "Missing STAGING_DATABASE_URL or DATABASE_URL" && exit 1)
-          test -n "$ADMIN_USERNAME" || (echo "Missing STAGING_ADMIN_USERNAME" && exit 1)
-          test -n "$ADMIN_EMAIL" || (echo "Missing STAGING_ADMIN_EMAIL" && exit 1)
-          test -n "$ADMIN_PASSWORD" || (echo "Missing STAGING_ADMIN_PASSWORD" && exit 1)
-          test -n "$SMOKE_API_BASE_URL" || (echo "Missing STAGING_API_BASE_URL" && exit 1)
+          test -n "$ADMIN_USERNAME" || (echo "Missing STAGING_ADMIN_USERNAME or ADMIN_USERNAME" && exit 1)
+          test -n "$ADMIN_EMAIL" || (echo "Missing STAGING_ADMIN_EMAIL or ADMIN_EMAIL" && exit 1)
+          test -n "$ADMIN_PASSWORD" || (echo "Missing STAGING_ADMIN_PASSWORD or ADMIN_PASSWORD" && exit 1)
+          test -n "$SMOKE_API_BASE_URL" || (echo "Missing STAGING_API_BASE_URL or SMOKE_API_BASE_URL" && exit 1)
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
