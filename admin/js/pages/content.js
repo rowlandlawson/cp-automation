@@ -23,9 +23,6 @@
                             <button class="btn btn-soft" id="refreshContentBtn" type="button">
                                 <i class="fa-solid fa-rotate me-2"></i>Refresh
                             </button>
-                            <button class="btn btn-primary" id="addContentBtn" type="button">
-                                <i class="fa-solid fa-plus me-2"></i>New section
-                            </button>
                         </div>
                     </section>
 
@@ -33,23 +30,12 @@
                         <div class="form-card is-hidden" id="contentFormCard">
                             <div class="card-title-row">
                                 <div>
-                                    <h4 class="mb-1" id="contentFormTitle">New content section</h4>
+                                    <h4 class="mb-1" id="contentFormTitle">Edit content section</h4>
                                     <p class="helper-text mb-0">
-                                        Give each block a stable section name so the frontend can reuse it reliably.
+                                        Update the existing section content used by the frontend.
                                     </p>
                                 </div>
                                 <button class="btn btn-soft btn-sm" id="cancelContentBtn" type="button">Close</button>
-                            </div>
-
-                            <div class="panel-card subtle-panel mb-4">
-                                <p class="helper-text mb-2">Suggested section names</p>
-                                <div class="stack-actions wrap-actions">
-                                    <button class="btn btn-soft btn-sm" data-template="hero_intro" type="button">hero_intro</button>
-                                    <button class="btn btn-soft btn-sm" data-template="about_intro" type="button">about_intro</button>
-                                    <button class="btn btn-soft btn-sm" data-template="services_overview" type="button">services_overview</button>
-                                    <button class="btn btn-soft btn-sm" data-template="products_overview" type="button">products_overview</button>
-                                    <button class="btn btn-soft btn-sm" data-template="contact_cta" type="button">contact_cta</button>
-                                </div>
                             </div>
 
                             <form id="contentForm" novalidate>
@@ -61,9 +47,10 @@
                                         type="text"
                                         placeholder="hero_intro"
                                         required
+                                        readonly
                                     />
                                     <div class="helper-text mt-2">
-                                        Use lowercase names with underscores so they stay predictable in code.
+                                        Section names are locked so the frontend references stay stable.
                                     </div>
                                 </div>
 
@@ -118,9 +105,6 @@
 
         static bindEvents() {
             document
-                .getElementById("addContentBtn")
-                .addEventListener("click", () => this.openCreateForm());
-            document
                 .getElementById("refreshContentBtn")
                 .addEventListener("click", () => this.loadSections());
             document
@@ -128,24 +112,13 @@
                 .addEventListener("click", () => this.closeForm());
             document
                 .getElementById("resetContentBtn")
-                .addEventListener("click", () => this.openCreateForm());
-
-            document.querySelectorAll("[data-template]").forEach((button) => {
-                button.addEventListener("click", () => {
-                    if (!this.sectionNameInput.value.trim()) {
-                        this.sectionNameInput.value = button.dataset.template || "";
+                .addEventListener("click", () => {
+                    if (this.form.dataset.mode === "edit" && this.form.dataset.id) {
+                        window.api.getContentSection(this.form.dataset.id).then((section) => {
+                            this.openEditForm(section);
+                        });
                     }
-                    this.formCard.classList.remove("is-hidden");
-                    this.sectionNameInput.focus();
                 });
-            });
-
-            this.sectionNameInput.addEventListener("blur", () => {
-                const normalized = this.normalizeSectionName(this.sectionNameInput.value);
-                if (normalized) {
-                    this.sectionNameInput.value = normalized;
-                }
-            });
 
             this.form.addEventListener("submit", async (event) => {
                 event.preventDefault();
@@ -159,15 +132,6 @@
                 .toLowerCase()
                 .replace(/[^a-z0-9]+/g, "_")
                 .replace(/^_+|_+$/g, "");
-        }
-
-        static openCreateForm() {
-            this.form.reset();
-            this.form.dataset.mode = "create";
-            delete this.form.dataset.id;
-            this.formTitle.textContent = "New content section";
-            this.formCard.classList.remove("is-hidden");
-            this.sectionNameInput.focus();
         }
 
         static openEditForm(section) {
@@ -192,7 +156,7 @@
                         <td colspan="4">
                             ${window.AdminUI.renderEmptyState(
                                 "No content sections yet",
-                                "Create reusable text blocks for the hero, about, services, and contact areas.",
+                                "Seed or import the reusable sections first, then edit them here.",
                                 "fa-file-lines",
                             )}
                         </td>
@@ -298,13 +262,12 @@
                     throw new Error("Section name is required.");
                 }
 
-                if (this.form.dataset.mode === "edit" && this.form.dataset.id) {
-                    await window.api.updateContentSection(this.form.dataset.id, payload);
-                    window.showAlert("Content section updated successfully.", "success");
-                } else {
-                    await window.api.createContentSection(payload);
-                    window.showAlert("Content section created successfully.", "success");
+                if (!(this.form.dataset.mode === "edit" && this.form.dataset.id)) {
+                    throw new Error("Creating new sections is disabled. Edit an existing section instead.");
                 }
+
+                await window.api.updateContentSection(this.form.dataset.id, payload);
+                window.showAlert("Content section updated successfully.", "success");
 
                 this.closeForm();
                 await this.loadSections();

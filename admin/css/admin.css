@@ -8,6 +8,7 @@
     --line: rgba(23, 32, 51, 0.1);
     --accent: #0f7cff;
     --accent-dark: #0b5fcc;
+    --sidebar-bg: linear-gradient(180deg, #0a2a66 0%, #081d48 100%);
     --success: #167c5b;
     --danger: #c53c5f;
     --shadow-lg: 0 24px 52px rgba(15, 23, 42, 0.08);
@@ -73,7 +74,7 @@ body:not(.logged-out) .login-screen {
     gap: 1rem;
     max-height: 100vh;
     padding: 1.1rem;
-    background: var(--accent);
+    background: var(--sidebar-bg);
     border-right: 1px solid rgba(255, 255, 255, 0.12);
     color: #f8fbff;
     overflow-x: hidden;
@@ -145,6 +146,9 @@ body.sidebar-open .sidebar-panel {
     flex: 1 1 auto;
     gap: 0.45rem;
     min-height: 0;
+    padding-right: 0.25rem;
+    overflow-y: auto;
+    overscroll-behavior: contain;
 }
 
 .sidebar-nav .nav-link,
@@ -161,6 +165,7 @@ body.sidebar-open .sidebar-panel {
     text-decoration: none;
     background: transparent;
     text-align: left;
+    white-space: normal;
     transition:
         transform 0.2s ease,
         background-color 0.2s ease,
@@ -186,6 +191,7 @@ body.sidebar-open .sidebar-panel {
 .nav-group {
     display: grid;
     gap: 0.35rem;
+    overflow: visible;
 }
 
 .nav-group-toggle {
@@ -210,7 +216,12 @@ body.sidebar-open .sidebar-panel {
 .nav-submenu {
     display: none;
     gap: 0.35rem;
+    padding-top: 0.2rem;
     padding-left: 0.4rem;
+    padding-bottom: 0.15rem;
+    max-height: min(40vh, 320px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
 }
 
 .nav-group.is-open .nav-submenu {
@@ -218,6 +229,8 @@ body.sidebar-open .sidebar-panel {
 }
 
 .nav-sublink {
+    align-items: flex-start;
+    min-height: 0;
     font-size: 0.95rem;
     padding-left: 2.6rem;
 }
@@ -225,6 +238,7 @@ body.sidebar-open .sidebar-panel {
 .sidebar-footer {
     margin-top: auto;
     padding-top: 1.25rem;
+    flex: 0 0 auto;
 }
 
 .session-chip {
@@ -504,6 +518,7 @@ body.sidebar-open .sidebar-panel {
 .page-layout {
     display: grid;
     gap: 1rem;
+    grid-template-columns: minmax(0, 1fr);
 }
 
 .form-card.is-hidden {
@@ -606,16 +621,17 @@ body.sidebar-open .sidebar-panel {
 }
 
 .table-thumbnail {
-    width: 88px;
-    height: 66px;
+    width: 64px;
+    height: 48px;
     object-fit: cover;
-    border-radius: 14px;
+    border-radius: 10px;
     border: 1px solid rgba(13, 22, 49, 0.08);
 }
 
 .image-preview-card {
     overflow: hidden;
-    border-radius: 18px;
+    max-width: 220px;
+    border-radius: 16px;
     border: 1px solid rgba(13, 22, 49, 0.08);
     background: rgba(13, 22, 49, 0.04);
 }
@@ -623,7 +639,7 @@ body.sidebar-open .sidebar-panel {
 .image-preview-card img {
     width: 100%;
     display: block;
-    aspect-ratio: 16 / 10;
+    aspect-ratio: 4 / 3;
     object-fit: cover;
 }
 
@@ -638,10 +654,10 @@ body.sidebar-open .sidebar-panel {
 }
 
 .asset-summary-image {
-    width: 4.8rem;
-    height: 4.8rem;
+    width: 3.6rem;
+    height: 3.6rem;
     object-fit: cover;
-    border-radius: 14px;
+    border-radius: 12px;
     border: 1px solid rgba(13, 22, 49, 0.08);
     flex-shrink: 0;
 }
@@ -730,6 +746,7 @@ textarea.form-control {
 .editor-layout {
     display: grid;
     gap: 1rem;
+    grid-template-columns: minmax(0, 1fr);
 }
 
 .field-grid {
@@ -742,9 +759,12 @@ textarea.form-control {
     grid-column: 1 / -1;
 }
 
-.preview-card,
 .form-card {
     position: static;
+}
+
+.preview-card {
+    display: none !important;
 }
 
 .preview-label {
@@ -932,6 +952,7 @@ textarea.form-control {
         inset: auto;
         top: 0;
         width: auto;
+        height: 100vh;
         transform: none;
         z-index: auto;
     }
@@ -940,22 +961,13 @@ textarea.form-control {
         display: none;
     }
 
-    .page-layout {
-        grid-template-columns: minmax(320px, 420px) minmax(0, 1fr);
-    }
-
+    .page-layout,
     .editor-layout {
-        grid-template-columns: minmax(0, 1.55fr) minmax(320px, 0.95fr);
+        grid-template-columns: minmax(0, 1fr);
     }
 
     .workspace-panels {
         grid-template-columns: 1.1fr 0.9fr;
-    }
-
-    .preview-card,
-    .form-card {
-        position: sticky;
-        top: 6.75rem;
     }
 
     .login-card {

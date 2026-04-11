@@ -10,7 +10,6 @@
     };
     const PASSWORD_POLICY_MESSAGE =
         "Password must be at least 12 characters and include uppercase, lowercase, number, and symbol characters.";
-    const DEFAULT_ADMIN_IMAGE_URL = "/assets/img/28753.jpg";
     const DEFAULT_ADMIN_LOGO_ASSET = Object.freeze({
         alt_text: "CP Automation company logo",
         secure_url: "/assets/img/logo.jpg",
@@ -68,7 +67,7 @@
     }
 
     function getDefaultImageUrl(kind = "general") {
-        return kind === "logo" ? DEFAULT_ADMIN_LOGO_ASSET.secure_url : DEFAULT_ADMIN_IMAGE_URL;
+        return DEFAULT_ADMIN_LOGO_ASSET.secure_url;
     }
 
     function truncate(value, maxLength = 90) {
@@ -536,7 +535,6 @@
                 }
                 <div class="asset-summary-body">
                     <strong>${escapeHTML(normalizedAsset.title || normalizedAsset.file_name || "Media asset")}</strong>
-                    <div class="entity-meta">Asset ID: ${escapeHTML(normalizedAsset.id)}</div>
                     <div class="entity-meta">${escapeHTML(normalizedAsset.alt_text || "No alt text yet")}</div>
                 </div>
             </div>

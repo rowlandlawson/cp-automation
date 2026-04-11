@@ -276,20 +276,7 @@
                                             <label class="form-label" for="homeMetaDescription">Meta description</label>
                                             <textarea class="form-control" id="homeMetaDescription" rows="3"></textarea>
                                         </div>
-                                        <div>
-                                            <label class="form-label" for="homeOgImage">OG image</label>
-                                            <input class="form-control" id="homeOgImage" type="file" accept="image/*" />
-                                        </div>
-                                        <div>
-                                            <label class="form-label" for="homeOgImageTitle">OG asset title</label>
-                                            <input class="form-control" id="homeOgImageTitle" type="text" />
-                                        </div>
-                                        <div class="field-span-full">
-                                            <label class="form-label" for="homeOgImageAlt">OG image alt text</label>
-                                            <input class="form-control" id="homeOgImageAlt" type="text" />
-                                        </div>
                                     </div>
-                                    <div class="mt-3" id="homeOgImagePreview"></div>
                                 </section>
                             </form>
                         </div>
@@ -366,10 +353,6 @@
 
             this.metaTitleInput = document.getElementById("homeMetaTitle");
             this.metaDescriptionInput = document.getElementById("homeMetaDescription");
-            this.ogImageInput = document.getElementById("homeOgImage");
-            this.ogImageTitleInput = document.getElementById("homeOgImageTitle");
-            this.ogImageAltInput = document.getElementById("homeOgImageAlt");
-            this.ogImagePreview = document.getElementById("homeOgImagePreview");
         }
 
         static bindEvents() {
@@ -388,11 +371,6 @@
 
             this.heroImageInput.addEventListener("change", () => {
                 this.updateAssetPreview("hero");
-                this.updatePreview();
-            });
-
-            this.ogImageInput.addEventListener("change", () => {
-                this.updateAssetPreview("og");
                 this.updatePreview();
             });
         }
@@ -468,32 +446,21 @@
 
             this.metaTitleInput.value = page.meta_title || "";
             this.metaDescriptionInput.value = page.meta_description || "";
-            this.ogImageTitleInput.value = page.og_image_asset?.title || "";
-            this.ogImageAltInput.value = page.og_image_asset?.alt_text || "";
 
             this.heroImageInput.value = "";
-            this.ogImageInput.value = "";
 
             this.updateAssetPreview("hero");
-            this.updateAssetPreview("og");
             this.updatePreview();
         }
 
         static updateAssetPreview(kind) {
-            const asset =
-                kind === "hero"
-                    ? this.state.current?.hero_visual_asset
-                    : this.state.current?.og_image_asset;
-            const fileInput = kind === "hero" ? this.heroImageInput : this.ogImageInput;
-            const preview = kind === "hero" ? this.heroImagePreview : this.ogImagePreview;
+            const asset = this.state.current?.hero_visual_asset;
+            const fileInput = this.heroImageInput;
+            const preview = this.heroImagePreview;
             const alt =
-                kind === "hero"
-                    ? this.heroImageAltInput.value.trim() ||
-                      this.heroHeadingInput.value.trim() ||
-                      "Homepage hero image"
-                    : this.ogImageAltInput.value.trim() ||
-                      this.heroHeadingInput.value.trim() ||
-                      "Homepage social preview image";
+                this.heroImageAltInput.value.trim() ||
+                this.heroHeadingInput.value.trim() ||
+                "Homepage hero image";
 
             const [file] = fileInput.files || [];
             if (file) {
@@ -511,7 +478,7 @@
                 preview,
                 getAssetUrl(asset),
                 alt,
-                asset?.id ? `Asset ID ${asset.id}` : "",
+                "",
             );
         }
 
@@ -594,8 +561,6 @@
                 <div class="preview-block">
                     <div class="preview-label">Media assets</div>
                     ${window.AdminUI.renderMediaSummary(this.state.current?.hero_visual_asset, "No hero asset connected yet")}
-                    <div class="section-divider"></div>
-                    ${window.AdminUI.renderMediaSummary(this.state.current?.og_image_asset, "No homepage OG image connected yet")}
                 </div>
             `;
         }
@@ -650,12 +615,6 @@
                     fileInput: this.heroImageInput,
                     title: this.heroImageTitleInput.value.trim() || heroHeading,
                 });
-                const ogAsset = await syncMediaAsset({
-                    altText: this.ogImageAltInput.value.trim() || `${heroHeading} social preview`,
-                    currentAsset: this.state.current?.og_image_asset,
-                    fileInput: this.ogImageInput,
-                    title: this.ogImageTitleInput.value.trim() || `${heroHeading} OG image`,
-                });
 
                 const payload = {
                     about_mission_body: this.missionBodyInput.value.trim(),
@@ -694,7 +653,7 @@
                     is_published: this.publishInput.checked,
                     meta_description: this.metaDescriptionInput.value.trim(),
                     meta_title: this.metaTitleInput.value.trim(),
-                    og_image_asset_id: ogAsset?.id ?? null,
+                    og_image_asset_id: this.state.current?.og_image_asset?.id ?? null,
                     products_section_intro: this.productsIntroInput.value.trim(),
                     products_section_title: this.productsTitleInput.value.trim(),
                     projects_section_intro: this.projectsIntroInput.value.trim(),

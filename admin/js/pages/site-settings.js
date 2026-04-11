@@ -203,20 +203,7 @@
                                             <label class="form-label" for="siteMetaDescription">Default meta description</label>
                                             <textarea class="form-control" id="siteMetaDescription" rows="3"></textarea>
                                         </div>
-                                        <div>
-                                            <label class="form-label" for="siteOgFile">Default OG image</label>
-                                            <input class="form-control" id="siteOgFile" type="file" accept="image/*" />
-                                        </div>
-                                        <div>
-                                            <label class="form-label" for="siteOgTitle">OG asset title</label>
-                                            <input class="form-control" id="siteOgTitle" type="text" />
-                                        </div>
-                                        <div class="field-span-full">
-                                            <label class="form-label" for="siteOgAlt">OG image alt text</label>
-                                            <input class="form-control" id="siteOgAlt" type="text" />
-                                        </div>
                                     </div>
-                                    <div class="mt-3" id="siteOgPreview"></div>
                                 </section>
                             </form>
                         </div>
@@ -267,11 +254,6 @@
             this.logoAltInput = document.getElementById("siteLogoAlt");
             this.logoPreview = document.getElementById("siteLogoPreview");
 
-            this.ogFileInput = document.getElementById("siteOgFile");
-            this.ogTitleInput = document.getElementById("siteOgTitle");
-            this.ogAltInput = document.getElementById("siteOgAlt");
-            this.ogPreview = document.getElementById("siteOgPreview");
-
             this.socialInputs = SOCIAL_FIELDS.reduce((record, field) => {
                 record[field] = document.querySelector(`[data-social-field="${field}"]`);
                 return record;
@@ -297,10 +279,6 @@
                 this.updatePreview();
             });
 
-            this.ogFileInput.addEventListener("change", () => {
-                this.updateAssetPreview("og");
-                this.updatePreview();
-            });
         }
 
         static createEmptySettings() {
@@ -342,35 +320,23 @@
 
             this.logoTitleInput.value = settings.logo_asset?.title || "";
             this.logoAltInput.value = settings.logo_asset?.alt_text || "";
-            this.ogTitleInput.value = settings.default_og_image_asset?.title || "";
-            this.ogAltInput.value = settings.default_og_image_asset?.alt_text || "";
-
             Object.entries(this.socialInputs).forEach(([field, input]) => {
                 input.value = socialMap[field] || "";
             });
 
             this.logoFileInput.value = "";
-            this.ogFileInput.value = "";
             this.updateAssetPreview("logo");
-            this.updateAssetPreview("og");
             this.updatePreview();
         }
 
         static updateAssetPreview(kind) {
-            const asset =
-                kind === "logo"
-                    ? this.state.current?.logo_asset
-                    : this.state.current?.default_og_image_asset;
-            const fileInput = kind === "logo" ? this.logoFileInput : this.ogFileInput;
-            const preview = kind === "logo" ? this.logoPreview : this.ogPreview;
+            const asset = this.state.current?.logo_asset;
+            const fileInput = this.logoFileInput;
+            const preview = this.logoPreview;
             const alt =
-                kind === "logo"
-                    ? this.logoAltInput.value.trim() ||
-                      this.companyNameInput.value.trim() ||
-                      "Company logo"
-                    : this.ogAltInput.value.trim() ||
-                      this.companyNameInput.value.trim() ||
-                      "Open Graph image";
+                this.logoAltInput.value.trim() ||
+                this.companyNameInput.value.trim() ||
+                "Company logo";
 
             const [file] = fileInput.files || [];
             if (file) {
@@ -380,9 +346,7 @@
                     window.URL.createObjectURL(file),
                     alt,
                     `${file.name} · pending upload`,
-                    kind === "logo"
-                        ? window.AdminUI.getDefaultImageUrl("logo")
-                        : window.AdminUI.getDefaultImageUrl(),
+                    window.AdminUI.getDefaultImageUrl("logo"),
                 );
                 return;
             }
@@ -391,10 +355,8 @@
                 preview,
                 getAssetUrl(asset),
                 alt,
-                asset?.id ? `Asset ID ${asset.id}` : "",
-                kind === "logo"
-                    ? window.AdminUI.getDefaultImageUrl("logo")
-                    : window.AdminUI.getDefaultImageUrl(),
+                "",
+                window.AdminUI.getDefaultImageUrl("logo"),
             );
         }
 
@@ -477,8 +439,6 @@
                 <div class="preview-block">
                     <div class="preview-label">Media assets</div>
                     ${window.AdminUI.renderMediaSummary(this.state.current?.logo_asset, "No logo connected yet", "logo")}
-                    <div class="section-divider"></div>
-                    ${window.AdminUI.renderMediaSummary(this.state.current?.default_og_image_asset, "No default OG image connected yet")}
                 </div>
             `;
         }
@@ -532,19 +492,12 @@
                     fileInput: this.logoFileInput,
                     title: this.logoTitleInput.value.trim() || `${companyName} logo`,
                 });
-                const ogAsset = await syncMediaAsset({
-                    altText: this.ogAltInput.value.trim() || `${companyName} social preview`,
-                    currentAsset: this.state.current?.default_og_image_asset,
-                    fileInput: this.ogFileInput,
-                    title: this.ogTitleInput.value.trim() || `${companyName} OG image`,
-                });
-
                 const payload = {
                     address: this.addressInput.value.trim(),
                     canonical_base_url: this.canonicalBaseUrlInput.value.trim(),
                     company_name: companyName,
                     company_summary: this.companySummaryInput.value.trim(),
-                    default_og_image_asset_id: ogAsset?.id ?? null,
+                    default_og_image_asset_id: this.state.current?.default_og_image_asset?.id ?? null,
                     email: this.emailInput.value.trim(),
                     footer_motto: this.footerMottoInput.value.trim(),
                     footer_product_links: productLinks,

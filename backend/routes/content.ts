@@ -59,16 +59,10 @@ contentRouter.post(
   "/",
   auth,
   asyncHandler(async (req, res) => {
-    const prisma = requirePrisma();
-    const section = await prisma.contentSection.create({
-      data: {
-        sectionName: requireString(req.body.section_name, "section_name"),
-        content: nullableString(req.body.content, "content") ?? null,
-        updatedBy: req.userId ?? null,
-      },
-    });
-
-    res.status(201).json(serializeContentSection(section));
+    throw new HttpError(
+      403,
+      "Creating new content sections is disabled. Edit an existing section instead.",
+    );
   }),
 );
 

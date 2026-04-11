@@ -203,20 +203,7 @@
                                             <label class="form-label" for="aboutMetaDescription">Meta description</label>
                                             <textarea class="form-control" id="aboutMetaDescription" rows="3"></textarea>
                                         </div>
-                                        <div>
-                                            <label class="form-label" for="aboutOgImage">OG image</label>
-                                            <input class="form-control" id="aboutOgImage" type="file" accept="image/*" />
-                                        </div>
-                                        <div>
-                                            <label class="form-label" for="aboutOgImageTitle">OG asset title</label>
-                                            <input class="form-control" id="aboutOgImageTitle" type="text" />
-                                        </div>
-                                        <div class="field-span-full">
-                                            <label class="form-label" for="aboutOgImageAlt">OG image alt text</label>
-                                            <input class="form-control" id="aboutOgImageAlt" type="text" />
-                                        </div>
                                     </div>
-                                    <div class="mt-3" id="aboutOgPreview"></div>
                                 </section>
                             </form>
                         </div>
@@ -271,10 +258,6 @@
             this.primaryCtaUrlInput = document.getElementById("aboutPrimaryCtaUrl");
             this.metaTitleInput = document.getElementById("aboutMetaTitle");
             this.metaDescriptionInput = document.getElementById("aboutMetaDescription");
-            this.ogImageInput = document.getElementById("aboutOgImage");
-            this.ogImageTitleInput = document.getElementById("aboutOgImageTitle");
-            this.ogImageAltInput = document.getElementById("aboutOgImageAlt");
-            this.ogPreview = document.getElementById("aboutOgPreview");
         }
 
         static bindEvents() {
@@ -293,11 +276,6 @@
 
             this.portraitFileInput.addEventListener("change", () => {
                 this.updateAssetPreview("portrait");
-                this.updatePreview();
-            });
-
-            this.ogImageInput.addEventListener("change", () => {
-                this.updateAssetPreview("og");
                 this.updatePreview();
             });
         }
@@ -343,32 +321,21 @@
             this.primaryCtaUrlInput.value = page.primary_cta_url || "";
             this.metaTitleInput.value = page.meta_title || "";
             this.metaDescriptionInput.value = page.meta_description || "";
-            this.ogImageTitleInput.value = page.og_image_asset?.title || "";
-            this.ogImageAltInput.value = page.og_image_asset?.alt_text || "";
 
             this.portraitFileInput.value = "";
-            this.ogImageInput.value = "";
 
             this.updateAssetPreview("portrait");
-            this.updateAssetPreview("og");
             this.updatePreview();
         }
 
         static updateAssetPreview(kind) {
-            const asset =
-                kind === "portrait"
-                    ? this.state.current?.portrait_asset
-                    : this.state.current?.og_image_asset;
-            const fileInput = kind === "portrait" ? this.portraitFileInput : this.ogImageInput;
-            const preview = kind === "portrait" ? this.portraitPreview : this.ogPreview;
+            const asset = this.state.current?.portrait_asset;
+            const fileInput = this.portraitFileInput;
+            const preview = this.portraitPreview;
             const alt =
-                kind === "portrait"
-                    ? this.portraitAltInput.value.trim() ||
-                      this.founderNameInput.value.trim() ||
-                      "Founder portrait"
-                    : this.ogImageAltInput.value.trim() ||
-                      this.pageTitleInput.value.trim() ||
-                      "About-page social preview image";
+                this.portraitAltInput.value.trim() ||
+                this.founderNameInput.value.trim() ||
+                "Founder portrait";
 
             const [file] = fileInput.files || [];
             if (file) {
@@ -386,7 +353,7 @@
                 preview,
                 getAssetUrl(asset),
                 alt,
-                asset?.id ? `Asset ID ${asset.id}` : "",
+                "",
             );
         }
 
@@ -453,8 +420,6 @@
                 <div class="preview-block">
                     <div class="preview-label">Media assets</div>
                     ${window.AdminUI.renderMediaSummary(this.state.current?.portrait_asset, "No founder portrait connected yet")}
-                    <div class="section-divider"></div>
-                    ${window.AdminUI.renderMediaSummary(this.state.current?.og_image_asset, "No About-page OG image connected yet")}
                 </div>
             `;
         }
@@ -496,15 +461,6 @@
                 }
 
                 const stats = window.AdminUI.parseStatLines(this.statsInput.value);
-                const ogAsset = await syncMediaAsset({
-                    altText:
-                        this.ogImageAltInput.value.trim() ||
-                        `${founderName} about-page social preview`,
-                    currentAsset: this.state.current?.og_image_asset,
-                    fileInput: this.ogImageInput,
-                    title:
-                        this.ogImageTitleInput.value.trim() || `${founderName} About page OG image`,
-                });
 
                 const formData = new window.FormData();
                 formData.append("slug", this.slugInput.value.trim() || "about");
@@ -542,7 +498,12 @@
                 formData.append("primary_cta_url", this.primaryCtaUrlInput.value.trim());
                 formData.append("meta_title", this.metaTitleInput.value.trim());
                 formData.append("meta_description", this.metaDescriptionInput.value.trim());
-                formData.append("og_image_asset_id", ogAsset?.id ? String(ogAsset.id) : "null");
+                formData.append(
+                    "og_image_asset_id",
+                    this.state.current?.og_image_asset?.id
+                        ? String(this.state.current.og_image_asset.id)
+                        : "null",
+                );
                 formData.append(
                     "portrait_title",
                     this.portraitTitleInput.value.trim() || `${founderName} portrait`,
