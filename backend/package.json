@@ -4,6 +4,7 @@
   "type": "module",
   "private": true,
   "scripts": {
+    "postinstall": "bun run prisma:generate",
     "dev": "bun --watch index.ts",
     "dev:nodemon": "nodemon --watch . --ext ts --exec bun run index.ts",
     "start": "bun run index.ts",

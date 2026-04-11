@@ -253,6 +253,8 @@
             policyLabel.textContent = window.AdminUI.getPasswordPolicyMessage();
         }
 
+        window.AdminUI.initPasswordToggles(form || document);
+
         if (!token && !storedRecovery) {
             setMessage(
                 tokenState,

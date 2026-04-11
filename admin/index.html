@@ -31,12 +31,13 @@
                 <div class="brand-lockup">
                     <div class="brand-mark">
                         <img
-                            class="brand-logo-image d-none"
+                            class="brand-logo-image"
                             data-admin-brand-logo
                             alt="CP Automation logo"
+                            src="/assets/img/logo.jpg"
                             loading="lazy"
                         />
-                        <div class="brand-icon" data-admin-brand-fallback>
+                        <div class="brand-icon d-none" data-admin-brand-fallback>
                             <i class="fa-solid fa-bolt"></i>
                         </div>
                     </div>
@@ -46,27 +47,83 @@
                     </div>
                 </div>
 
-                <nav class="sidebar-nav">
+                <nav class="sidebar-nav" aria-label="Admin navigation">
                     <a class="nav-link active" href="#overview" data-page="overview">
-                        <i class="fa-solid fa-chart-line"></i>
+                        <i class="fa-solid fa-house"></i>
                         <span>Overview</span>
                     </a>
-                    <a class="nav-link" href="#site-settings" data-page="site-settings">
-                        <i class="fa-solid fa-building"></i>
-                        <span>Settings</span>
-                    </a>
-                    <a class="nav-link" href="#about-page" data-page="about-page">
-                        <i class="fa-solid fa-user-tie"></i>
-                        <span>About Page</span>
-                    </a>
-                    <a class="nav-link" href="#projects" data-page="projects">
-                        <i class="fa-regular fa-images"></i>
-                        <span>Projects</span>
-                    </a>
-                    <a class="nav-link" href="#account-settings" data-page="account-settings">
-                        <i class="fa-solid fa-key"></i>
-                        <span>Account Settings</span>
-                    </a>
+
+                    <div class="nav-group is-open" data-nav-group>
+                        <button class="nav-group-toggle" type="button" data-nav-group-toggle aria-expanded="true">
+                            <span class="nav-group-label">
+                                <i class="fa-solid fa-pen-ruler"></i>
+                                <span>Website Content</span>
+                            </span>
+                            <i class="fa-solid fa-chevron-down nav-group-chevron"></i>
+                        </button>
+                        <div class="nav-submenu">
+                            <a class="nav-link nav-sublink" href="#home-page" data-page="home-page">
+                                <i class="fa-solid fa-window-maximize"></i>
+                                <span>Homepage</span>
+                            </a>
+                            <a class="nav-link nav-sublink" href="#about-page" data-page="about-page">
+                                <i class="fa-solid fa-user-tie"></i>
+                                <span>About Page</span>
+                            </a>
+                            <a class="nav-link nav-sublink" href="#content" data-page="content">
+                                <i class="fa-solid fa-file-lines"></i>
+                                <span>Reusable Sections</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="nav-group" data-nav-group>
+                        <button class="nav-group-toggle" type="button" data-nav-group-toggle aria-expanded="false">
+                            <span class="nav-group-label">
+                                <i class="fa-solid fa-layer-group"></i>
+                                <span>Collections</span>
+                            </span>
+                            <i class="fa-solid fa-chevron-down nav-group-chevron"></i>
+                        </button>
+                        <div class="nav-submenu">
+                            <a class="nav-link nav-sublink" href="#products" data-page="products">
+                                <i class="fa-solid fa-box-open"></i>
+                                <span>Products</span>
+                            </a>
+                            <a class="nav-link nav-sublink" href="#services" data-page="services">
+                                <i class="fa-solid fa-screwdriver-wrench"></i>
+                                <span>Services</span>
+                            </a>
+                            <a class="nav-link nav-sublink" href="#projects" data-page="projects">
+                                <i class="fa-regular fa-images"></i>
+                                <span>Projects</span>
+                            </a>
+                            <a class="nav-link nav-sublink" href="#testimonials" data-page="testimonials">
+                                <i class="fa-solid fa-comments"></i>
+                                <span>Testimonials</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="nav-group" data-nav-group>
+                        <button class="nav-group-toggle" type="button" data-nav-group-toggle aria-expanded="false">
+                            <span class="nav-group-label">
+                                <i class="fa-solid fa-gear"></i>
+                                <span>Brand & Admin</span>
+                            </span>
+                            <i class="fa-solid fa-chevron-down nav-group-chevron"></i>
+                        </button>
+                        <div class="nav-submenu">
+                            <a class="nav-link nav-sublink" href="#site-settings" data-page="site-settings">
+                                <i class="fa-solid fa-building"></i>
+                                <span>Site Settings</span>
+                            </a>
+                            <a class="nav-link nav-sublink" href="#account-settings" data-page="account-settings">
+                                <i class="fa-solid fa-key"></i>
+                                <span>Account Settings</span>
+                            </a>
+                        </div>
+                    </div>
                 </nav>
 
                 <div class="sidebar-footer">
@@ -80,7 +137,7 @@
                         </div>
                     </div>
 
-                    <button class="btn btn-outline-light w-100 mt-3" id="logoutBtn" type="button">
+                    <button class="btn btn-soft w-100 mt-3" id="logoutBtn" type="button">
                         <i class="fa-solid fa-right-from-bracket me-2"></i>
                         Logout
                     </button>
@@ -101,6 +158,9 @@
                         <div>
                             <p class="eyebrow mb-1">Admin workspace</p>
                             <h2 class="page-title mb-0" id="pageTitle">Overview</h2>
+                            <p class="page-caption mb-0" id="pageCaption">
+                                A simple control center for your public website content.
+                            </p>
                         </div>
                     </div>
 
@@ -142,9 +202,14 @@
         <script src="js/ui.js"></script>
         <script src="js/auth.js"></script>
         <script src="js/api.js"></script>
+        <script src="js/pages/home-page.js"></script>
         <script src="js/pages/site-settings.js"></script>
         <script src="js/pages/about-page.js"></script>
+        <script src="js/pages/content.js"></script>
+        <script src="js/pages/products.js"></script>
+        <script src="js/pages/services.js"></script>
         <script src="js/pages/projects.js"></script>
+        <script src="js/pages/testimonials.js"></script>
         <script src="js/pages/account-settings.js"></script>
         <script src="js/dashboard.js"></script>
     </body>

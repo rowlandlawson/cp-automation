@@ -70,6 +70,7 @@
                                             name="currentPasswordForEmail"
                                             type="password"
                                             autocomplete="current-password"
+                                            data-password-toggle
                                             required
                                         />
                                     </div>
@@ -95,15 +96,15 @@
                                     <div class="field-stack">
                                         <div>
                                             <label class="form-label" for="currentPassword">Current password</label>
-                                            <input class="form-control" id="currentPassword" name="currentPassword" type="password" autocomplete="current-password" required />
+                                            <input class="form-control" id="currentPassword" name="currentPassword" type="password" autocomplete="current-password" data-password-toggle required />
                                         </div>
                                         <div>
                                             <label class="form-label" for="newPassword">New password</label>
-                                            <input class="form-control" id="newPassword" name="newPassword" type="password" autocomplete="new-password" required />
+                                            <input class="form-control" id="newPassword" name="newPassword" type="password" autocomplete="new-password" data-password-toggle required />
                                         </div>
                                         <div>
                                             <label class="form-label" for="confirmNewPassword">Confirm new password</label>
-                                            <input class="form-control" id="confirmNewPassword" name="confirmNewPassword" type="password" autocomplete="new-password" required />
+                                            <input class="form-control" id="confirmNewPassword" name="confirmNewPassword" type="password" autocomplete="new-password" data-password-toggle required />
                                         </div>
                                     </div>
 
@@ -160,6 +161,7 @@
             `;
 
             this.bindEvents();
+            window.AdminUI.initPasswordToggles(contentArea);
             this.updatePreview(user);
         },
 

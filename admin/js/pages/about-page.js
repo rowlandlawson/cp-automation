@@ -49,11 +49,11 @@
                 <div class="page-shell">
                     <section class="panel-card page-header-card">
                         <div>
-                            <p class="eyebrow text-primary mb-2">Founder story</p>
-                            <h3 class="mb-2">Manage the dedicated About page, portrait, and credibility layer.</h3>
+                            <p class="eyebrow text-primary mb-2">About page</p>
+                            <h3 class="mb-2">Keep the About page focused, clear, and easy to manage.</h3>
                             <p class="page-summary">
-                                This editor controls the founder profile, company story, mission and vision,
-                                service reach, trust signals, and About-page SEO.
+                                Use this page for three simple sections: the company story, the team
+                                leader or CEO profile, and the values or benefits visitors should remember.
                             </p>
                         </div>
                         <div class="stack-actions">
@@ -73,7 +73,7 @@
                                     <div class="inline-status-row mb-3">
                                         <div>
                                             <h3 class="mb-1">Page setup</h3>
-                                            <p class="helper-text mb-0">Control visibility and the top-level positioning for the About page.</p>
+                                            <p class="helper-text mb-0">Control visibility and the top-level About-page heading.</p>
                                         </div>
                                         <div class="form-check form-switch">
                                             <input class="form-check-input" id="aboutPagePublish" type="checkbox" checked />
@@ -101,8 +101,8 @@
                                 </section>
 
                                 <section class="panel-card editor-section">
-                                    <h3 class="mb-1">Founder profile and portrait</h3>
-                                    <p class="helper-text mb-3">Add the human story, role, summary bio, and portrait metadata used for the page.</p>
+                                    <h3 class="mb-1">Team leader / CEO profile</h3>
+                                    <p class="helper-text mb-3">Add the leader name, role, short introduction, and profile image used on the public About page.</p>
                                     <div class="field-grid">
                                         <div>
                                             <label class="form-label" for="aboutFounderName">Founder / admin name</label>
@@ -133,8 +133,8 @@
                                 </section>
 
                                 <section class="panel-card editor-section">
-                                    <h3 class="mb-1">Story, mission, and vision</h3>
-                                    <p class="helper-text mb-3">Capture the longer founder narrative and the business direction behind the brand.</p>
+                                    <h3 class="mb-1">About the company</h3>
+                                    <p class="helper-text mb-3">Capture the company story and the direction behind the brand in a simpler way.</p>
                                     <div class="field-grid">
                                         <div class="field-span-full">
                                             <label class="form-label" for="aboutLongStory">Long story</label>
@@ -152,8 +152,8 @@
                                 </section>
 
                                 <section class="panel-card editor-section">
-                                    <h3 class="mb-1">Credibility and reach</h3>
-                                    <p class="helper-text mb-3">List the values, certifications, stats, locations, and differentiators that build trust.</p>
+                                    <h3 class="mb-1">Values and customer value</h3>
+                                    <p class="helper-text mb-3">Add the values and the practical benefits CP Automation brings to clients. These are best kept short and card-friendly.</p>
                                     <div class="field-grid">
                                         <div>
                                             <label class="form-label" for="aboutValues">Values</label>

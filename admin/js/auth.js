@@ -112,12 +112,13 @@
                         <div class="login-brand-lockup">
                             <div class="brand-mark">
                                 <img
-                                    class="brand-logo-image d-none"
+                                    class="brand-logo-image"
                                     data-admin-brand-logo
                                     alt="CP Automation logo"
+                                    src="${window.AdminUI.escapeHTML(window.AdminUI.getDefaultImageUrl("logo"))}"
                                     loading="lazy"
                                 />
-                                <div class="brand-icon" data-admin-brand-fallback>
+                                <div class="brand-icon d-none" data-admin-brand-fallback>
                                     <i class="fa-solid fa-bolt"></i>
                                 </div>
                             </div>
@@ -157,7 +158,7 @@
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label" for="password">Password</label>
-                                        <input class="form-control" id="password" name="password" type="password" autocomplete="current-password" required />
+                                        <input class="form-control" id="password" name="password" type="password" autocomplete="current-password" data-password-toggle required />
                                     </div>
                                     <div class="login-link-row">
                                         <a href="forgot-password.html" class="login-inline-link">Forgot password?</a>
@@ -177,6 +178,7 @@
             `;
 
             window.AdminUI.applyAdminBranding();
+            window.AdminUI.initPasswordToggles(loginView);
             window.AdminUI.loadAdminBranding().catch(() => undefined);
 
             if (isBusy) {

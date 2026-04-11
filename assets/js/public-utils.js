@@ -185,11 +185,23 @@ window.CPPublicUtils = (() => {
     }
 
     function resolveAssetUrl(asset, fallback = "") {
-        return asset?.secure_url || asset?.url || fallback;
+        const secureUrl = String(asset?.secure_url || "").trim();
+        if (secureUrl) {
+            return secureUrl;
+        }
+
+        const url = String(asset?.url || "").trim();
+        return url || fallback;
     }
 
     function resolveAssetAlt(asset, fallback = "CP Automation image") {
-        return asset?.alt_text || asset?.title || fallback;
+        const altText = String(asset?.alt_text || "").trim();
+        if (altText) {
+            return altText;
+        }
+
+        const title = String(asset?.title || "").trim();
+        return title || fallback;
     }
 
     function getResponsiveImageData(imageUrl) {

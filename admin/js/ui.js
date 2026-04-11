@@ -59,7 +59,12 @@
     }
 
     function getMediaAssetUrl(asset) {
-        return asset?.secure_url || asset?.url || "";
+        const secureUrl = String(asset?.secure_url || "").trim();
+        if (secureUrl) {
+            return secureUrl;
+        }
+
+        return String(asset?.url || "").trim();
     }
 
     function getDefaultImageUrl(kind = "general") {
@@ -209,6 +214,43 @@
         adminBrandingLoaded = true;
         applyAdminBranding(branding);
         return adminBrandingCache;
+    }
+
+    function initPasswordToggles(root = document) {
+        const scope =
+            root && typeof root.querySelectorAll === "function" ? root : document;
+
+        scope.querySelectorAll("input[data-password-toggle]").forEach((input) => {
+            if (!(input instanceof window.HTMLInputElement) || input.dataset.passwordToggleReady === "true") {
+                return;
+            }
+
+            const wrapper = document.createElement("div");
+            wrapper.className = "password-toggle-field";
+
+            input.parentNode?.insertBefore(wrapper, input);
+            wrapper.appendChild(input);
+
+            const button = document.createElement("button");
+            button.type = "button";
+            button.className = "password-toggle-button";
+            button.setAttribute("aria-label", "Show password");
+            button.setAttribute("aria-pressed", "false");
+            button.innerHTML = '<i class="fa-regular fa-eye" aria-hidden="true"></i>';
+
+            button.addEventListener("click", () => {
+                const shouldReveal = input.type === "password";
+                input.type = shouldReveal ? "text" : "password";
+                button.setAttribute("aria-label", shouldReveal ? "Hide password" : "Show password");
+                button.setAttribute("aria-pressed", shouldReveal ? "true" : "false");
+                button.innerHTML = shouldReveal
+                    ? '<i class="fa-regular fa-eye-slash" aria-hidden="true"></i>'
+                    : '<i class="fa-regular fa-eye" aria-hidden="true"></i>';
+            });
+
+            wrapper.appendChild(button);
+            input.dataset.passwordToggleReady = "true";
+        });
     }
 
     function validateImageFile(file, maxBytes = 10 * 1024 * 1024) {
@@ -512,6 +554,7 @@
         getDefaultImageUrl,
         getMediaAssetUrl,
         getPasswordPolicyMessage: () => PASSWORD_POLICY_MESSAGE,
+        initPasswordToggles,
         loadAdminBranding,
         linesToText,
         parseLinkLines,
