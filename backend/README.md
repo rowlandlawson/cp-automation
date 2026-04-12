@@ -70,7 +70,7 @@ Before this backend can work end-to-end in a real environment, you still need to
 - A password reset delivery target:
   - recommended: Brevo transactional email with `BREVO_API_KEY` and `BREVO_SENDER_EMAIL`
   - alternative: a custom `PASSWORD_RESET_WEBHOOK_URL`
-- Frontend and admin URLs for `CORS_ORIGIN` and `ADMIN_APP_URL`
+- Frontend and admin URLs for `CORS_ORIGIN` or `CORS_ORIGINS`, plus `ADMIN_APP_URL`
 - Review the committed admin seed in `backend/prisma/seed-data/admin.ts` and change it before using a shared environment
 
 If neither Brevo nor `PASSWORD_RESET_WEBHOOK_URL` is configured, forgot-password requests only log the reset URL instead of sending email.

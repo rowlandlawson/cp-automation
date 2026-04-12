@@ -22,6 +22,27 @@ type RuntimeEnv = {
   PORT: number;
 };
 
+function parseOrigins(value: string | undefined): string[] {
+  return (value ?? "")
+    .split(",")
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+}
+
+function extractOrigin(url: string | undefined): string | null {
+  const normalized = url?.trim();
+
+  if (!normalized) {
+    return null;
+  }
+
+  try {
+    return new URL(normalized).origin;
+  } catch {
+    return null;
+  }
+}
+
 const missingEnvironmentVariables = [
   "DATABASE_URL",
   "JWT_SECRET",
@@ -34,13 +55,24 @@ if (missingEnvironmentVariables.length > 0) {
   console.warn(`[env] Missing environment variables: ${missingEnvironmentVariables.join(", ")}`);
 }
 
-const corsOrigins = (process.env.CORS_ORIGIN ?? "http://localhost:3000")
-  .split(",")
-  .map((origin) => origin.trim())
-  .filter(Boolean);
+const configuredCorsOrigins = [
+  ...parseOrigins(process.env.CORS_ORIGINS),
+  ...parseOrigins(process.env.CORS_ORIGIN),
+];
+
+const adminAppUrl = process.env.ADMIN_APP_URL ?? "http://localhost:3000/admin";
+const adminAppOrigin = extractOrigin(adminAppUrl);
+
+const corsOrigins = Array.from(
+  new Set([
+    ...configuredCorsOrigins,
+    ...(adminAppOrigin ? [adminAppOrigin] : []),
+    ...(configuredCorsOrigins.length === 0 && !adminAppOrigin ? ["http://localhost:3000"] : []),
+  ]),
+);
 
 export const env: RuntimeEnv = {
-  ADMIN_APP_URL: process.env.ADMIN_APP_URL ?? "http://localhost:3000/admin",
+  ADMIN_APP_URL: adminAppUrl,
   BREVO_API_KEY: process.env.BREVO_API_KEY?.trim() ?? "",
   BREVO_REPLY_TO_EMAIL: process.env.BREVO_REPLY_TO_EMAIL?.trim() ?? "",
   BREVO_REPLY_TO_NAME: process.env.BREVO_REPLY_TO_NAME?.trim() ?? "",
