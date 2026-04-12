@@ -8,6 +8,10 @@ const PRIVATE_API_CACHE_HEADER = "private, no-store";
 const STATIC_IMAGE_CACHE_HEADER = "public, max-age=604800, stale-while-revalidate=2592000";
 const STATIC_ASSET_CACHE_HEADER = "public, max-age=3600, stale-while-revalidate=86400";
 
+function isFreshPublicSingletonPath(pathname: string): boolean {
+  return /^\/api\/(about-page|home-page|site-settings)(\/|$)/.test(pathname);
+}
+
 function isPublicApiPath(pathname: string): boolean {
   return (
     /^\/api\/(about-page|home-page|products|projects|services|site-settings|testimonials)(\/|$)/.test(
@@ -37,7 +41,10 @@ export function apiCacheControl(req: Request, res: Response, next: NextFunction)
   }
 
   if (isPublicApiPath(fullPath)) {
-    res.setHeader("Cache-Control", PUBLIC_API_CACHE_HEADER);
+    res.setHeader(
+      "Cache-Control",
+      isFreshPublicSingletonPath(fullPath) ? PRIVATE_API_CACHE_HEADER : PUBLIC_API_CACHE_HEADER,
+    );
   } else {
     res.setHeader("Cache-Control", PRIVATE_API_CACHE_HEADER);
   }

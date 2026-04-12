@@ -34,6 +34,12 @@ body {
     font-family: "IBM Plex Sans", sans-serif;
     color: var(--ink-strong);
     background: var(--surface);
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+body::-webkit-scrollbar {
+    display: none;
 }
 
 h1,
@@ -226,6 +232,19 @@ body.sidebar-open .sidebar-panel {
 
 .nav-group.is-open .nav-submenu {
     display: grid;
+}
+
+.sidebar-panel,
+.sidebar-nav,
+.nav-submenu {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.sidebar-panel::-webkit-scrollbar,
+.sidebar-nav::-webkit-scrollbar,
+.nav-submenu::-webkit-scrollbar {
+    display: none;
 }
 
 .nav-sublink {

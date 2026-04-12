@@ -31,6 +31,16 @@
             return new URLSearchParams(window.location.search).get("message") || "";
         }
 
+        clearMessageQuery() {
+            const url = new URL(window.location.href);
+            if (!url.searchParams.has("message")) {
+                return;
+            }
+
+            url.searchParams.delete("message");
+            window.history.replaceState({}, document.title, url.toString());
+        }
+
         buildPageUrl(fileName, message = "") {
             const target = new URL(fileName, document.baseURI || window.location.href);
             target.search = "";
@@ -202,18 +212,17 @@
         }
 
         showLoginPage(message = "") {
-            const resolvedMessage = message || this.getMessageFromQuery();
-
             if (!this.isLoginPage()) {
                 this.updateSessionUI();
                 this.emitChange();
-                this.redirectToLogin(resolvedMessage || "Please sign in to continue.");
+                this.redirectToLogin();
                 return;
             }
 
             document.body.classList.add("logged-out");
             document.body.classList.remove("sidebar-open");
-            this.renderLoginScreen(resolvedMessage, false);
+            this.clearMessageQuery();
+            this.renderLoginScreen(message, false);
             this.updateSessionUI();
             this.emitChange();
         }
@@ -247,7 +256,7 @@
                 this.showDashboard();
             } catch (_error) {
                 this.clearSession();
-                this.showLoginPage("Your session expired. Please sign in again.");
+                this.showLoginPage();
             }
         }
 
@@ -283,7 +292,7 @@
 
                 const data = await response.json().catch(() => ({}));
                 if (!response.ok) {
-                    throw new Error(data.error || "Invalid credentials.");
+                    throw new Error("Wrong username or password.");
                 }
 
                 this.persistSession(data.token, data.user);
@@ -294,7 +303,7 @@
                 }
             } catch (error) {
                 if (errorBox) {
-                    errorBox.textContent = error.message || "Unable to sign in.";
+                    errorBox.textContent = error.message || "Wrong username or password.";
                     errorBox.classList.remove("d-none");
                 }
             } finally {
@@ -333,7 +342,7 @@
             }
 
             if (!this.token) {
-                this.redirectToLogin("Please sign in to access the admin dashboard.");
+                this.redirectToLogin();
                 return;
             }
 

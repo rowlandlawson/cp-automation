@@ -3,7 +3,6 @@
         overview: "workspace",
         "home-page": "content",
         "about-page": "content",
-        content: "content",
         products: "collections",
         services: "collections",
         projects: "collections",
@@ -31,11 +30,6 @@
                 title: "About Page",
                 caption: "Manage the company story, CEO profile, values, and page metadata.",
                 render: () => window.AboutPageEditor.init(),
-            },
-            content: {
-                title: "Reusable Sections",
-                caption: "Maintain shared copy blocks used across the public website.",
-                render: () => window.ContentPage.init(),
             },
             products: {
                 title: "Products",

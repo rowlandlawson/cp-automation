@@ -1,6 +1,43 @@
 (function () {
+    async function syncMediaAsset({ fileInput, currentAsset, title, altText }) {
+        const [file] = fileInput.files || [];
+
+        if (file) {
+            window.AdminUI.validateImageFile(file);
+            return window.api.uploadMediaAsset(file, {
+                alt_text: altText,
+                title,
+            });
+        }
+
+        if (!currentAsset?.id) {
+            return currentAsset || null;
+        }
+
+        const currentTitle = String(currentAsset.title || "").trim();
+        const currentAlt = String(currentAsset.alt_text || "").trim();
+        const nextTitle = String(title || "").trim();
+        const nextAlt = String(altText || "").trim();
+
+        if (currentTitle === nextTitle && currentAlt === nextAlt) {
+            return currentAsset;
+        }
+
+        return window.api.updateMediaAsset(currentAsset.id, {
+            alt_text: nextAlt,
+            title: nextTitle,
+        });
+    }
+
+    function getAssetUrl(asset) {
+        return asset?.secure_url || asset?.url || "";
+    }
+
     class ProductsPage {
         static init() {
+            this.state = {
+                current: null,
+            };
             this.render();
             this.cacheElements();
             this.bindEvents();
@@ -67,6 +104,24 @@
                                     <textarea class="form-control" id="productFeatures" placeholder="One paragraph or a short list separated by commas."></textarea>
                                 </div>
 
+                                <div class="mb-3">
+                                    <label class="form-label" for="productImageFile">Product image</label>
+                                    <input class="form-control" id="productImageFile" type="file" accept="image/*" />
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label" for="productImageTitle">Image title</label>
+                                        <input class="form-control" id="productImageTitle" type="text" />
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label" for="productImageAlt">Image alt text</label>
+                                        <input class="form-control" id="productImageAlt" type="text" />
+                                    </div>
+                                </div>
+
+                                <div class="mb-4" id="productImagePreview"></div>
+
                                 <div class="stack-actions">
                                     <button class="btn btn-primary" id="saveProductBtn" type="submit">Save product</button>
                                     <button class="btn btn-soft" id="resetProductBtn" type="button">Reset</button>
@@ -80,6 +135,7 @@
                                     <thead>
                                         <tr>
                                             <th>Product</th>
+                                            <th>Image</th>
                                             <th>Highlights</th>
                                             <th>Status</th>
                                             <th>Updated</th>
@@ -87,7 +143,7 @@
                                         </tr>
                                     </thead>
                                     <tbody id="productsTableBody">
-                                        ${window.AdminUI.renderLoadingTable(5, "Loading products...")}
+                                        ${window.AdminUI.renderLoadingTable(6, "Loading products...")}
                                     </tbody>
                                 </table>
                             </div>
@@ -105,6 +161,10 @@
             this.nameInput = document.getElementById("productName");
             this.descriptionInput = document.getElementById("productDescription");
             this.featuresInput = document.getElementById("productFeatures");
+            this.imageFileInput = document.getElementById("productImageFile");
+            this.imageTitleInput = document.getElementById("productImageTitle");
+            this.imageAltInput = document.getElementById("productImageAlt");
+            this.imagePreview = document.getElementById("productImagePreview");
             this.orderInput = document.getElementById("productOrder");
             this.publishedInput = document.getElementById("productPublished");
             this.saveButton = document.getElementById("saveProductBtn");
@@ -123,6 +183,12 @@
             document
                 .getElementById("resetProductBtn")
                 .addEventListener("click", () => this.openCreateForm());
+
+            this.imageFileInput.addEventListener("change", () => this.updateImagePreview());
+            this.imageAltInput.addEventListener("input", () => this.updateImagePreview());
+            this.imageTitleInput.addEventListener("input", () => this.updateImagePreview());
+            this.nameInput.addEventListener("input", () => this.updateImagePreview());
+
             this.form.addEventListener("submit", async (event) => {
                 event.preventDefault();
                 await this.saveProduct();
@@ -133,22 +199,32 @@
             this.form.reset();
             this.form.dataset.mode = "create";
             delete this.form.dataset.id;
+            this.state.current = null;
             this.formTitle.textContent = "New product";
             this.orderInput.value = "0";
             this.publishedInput.checked = true;
+            this.imageTitleInput.value = "";
+            this.imageAltInput.value = "";
+            this.imageFileInput.value = "";
+            this.updateImagePreview();
             this.formCard.classList.remove("is-hidden");
             this.nameInput.focus();
         }
 
         static openEditForm(product) {
+            this.state.current = product;
             this.form.dataset.mode = "edit";
             this.form.dataset.id = String(product.id);
             this.formTitle.textContent = `Edit: ${product.name}`;
             this.nameInput.value = product.name || "";
             this.descriptionInput.value = product.description || "";
             this.featuresInput.value = product.features || "";
+            this.imageTitleInput.value = product.featured_asset?.title || product.name || "";
+            this.imageAltInput.value = product.featured_asset?.alt_text || product.name || "";
+            this.imageFileInput.value = "";
             this.orderInput.value = String(product.order_index ?? 0);
             this.publishedInput.checked = Boolean(product.is_published);
+            this.updateImagePreview();
             this.formCard.classList.remove("is-hidden");
             document.querySelector(".main-content")?.scrollTo({ top: 0, behavior: "smooth" });
         }
@@ -156,13 +232,47 @@
         static closeForm() {
             this.formCard.classList.add("is-hidden");
             this.form.reset();
+            this.state.current = null;
+            this.imageTitleInput.value = "";
+            this.imageAltInput.value = "";
+            this.imageFileInput.value = "";
+            this.updateImagePreview();
+        }
+
+        static updateImagePreview() {
+            const [file] = this.imageFileInput.files || [];
+            const fallbackAlt =
+                this.imageAltInput.value.trim() ||
+                this.nameInput.value.trim() ||
+                "Product image";
+
+            if (file) {
+                window.AdminUI.validateImageFile(file);
+                window.AdminUI.setImagePreview(
+                    this.imagePreview,
+                    window.URL.createObjectURL(file),
+                    fallbackAlt,
+                    "Pending upload",
+                );
+                return;
+            }
+
+            window.AdminUI.setImagePreview(
+                this.imagePreview,
+                getAssetUrl(this.state.current?.featured_asset),
+                fallbackAlt,
+                this.state.current?.featured_asset?.id
+                    ? `Asset ID ${this.state.current.featured_asset.id}`
+                    : "",
+                window.AdminUI.getDefaultImageUrl(),
+            );
         }
 
         static renderRows(products) {
             if (!products.length) {
                 this.tableBody.innerHTML = `
                     <tr>
-                        <td colspan="5">
+                        <td colspan="6">
                             ${window.AdminUI.renderEmptyState(
                                 "No products yet",
                                 "Create a product entry to populate the catalog section.",
@@ -182,6 +292,7 @@
                             <div class="entity-title">${window.AdminUI.escapeHTML(product.name)}</div>
                             <div class="entity-meta">Order: ${window.AdminUI.escapeHTML(product.order_index ?? 0)}</div>
                         </td>
+                        <td>${window.AdminUI.renderImageThumb(getAssetUrl(product.featured_asset), product.featured_asset?.alt_text || product.name)}</td>
                         <td class="entity-meta">${window.AdminUI.escapeHTML(window.AdminUI.truncate(product.features || product.description || "No description", 120))}</td>
                         <td>${window.AdminUI.renderStatusPill(product.is_published)}</td>
                         <td class="entity-meta">${window.AdminUI.formatDate(product.updated_at)}</td>
@@ -200,7 +311,7 @@
                 )
                 .join("");
 
-            this.tableBody.querySelectorAll("[data-action='edit']").forEach((button) => {
+                this.tableBody.querySelectorAll("[data-action='edit']").forEach((button) => {
                 button.addEventListener("click", async () => {
                     const product = await window.api.getProduct(button.dataset.id);
                     this.openEditForm(product);
@@ -225,7 +336,7 @@
         }
 
         static async loadProducts() {
-            this.tableBody.innerHTML = window.AdminUI.renderLoadingTable(5, "Loading products...");
+            this.tableBody.innerHTML = window.AdminUI.renderLoadingTable(6, "Loading products...");
 
             try {
                 const products = await window.api.getProducts();
@@ -233,7 +344,7 @@
             } catch (error) {
                 this.tableBody.innerHTML = `
                     <tr>
-                        <td colspan="5">
+                        <td colspan="6">
                             ${window.AdminUI.renderEmptyState(
                                 "Unable to load products",
                                 error.message ||
@@ -263,12 +374,24 @@
                 }
 
                 const payload = {
+                    featured_asset_id: null,
                     name,
                     description: this.descriptionInput.value.trim(),
                     features: this.featuresInput.value.trim(),
                     order_index: orderIndex,
                     is_published: this.publishedInput.checked,
                 };
+
+                const imageTitle = this.imageTitleInput.value.trim() || name;
+                const imageAltText = this.imageAltInput.value.trim() || name;
+                const featuredAsset = await syncMediaAsset({
+                    fileInput: this.imageFileInput,
+                    currentAsset: this.state.current?.featured_asset || null,
+                    title: imageTitle,
+                    altText: imageAltText,
+                });
+
+                payload.featured_asset_id = featuredAsset?.id ?? null;
 
                 if (this.form.dataset.mode === "edit" && this.form.dataset.id) {
                     await window.api.updateProduct(this.form.dataset.id, payload);

@@ -60,10 +60,25 @@
     function getMediaAssetUrl(asset) {
         const secureUrl = String(asset?.secure_url || "").trim();
         if (secureUrl) {
-            return secureUrl;
+            return normalizeMediaUrl(secureUrl);
         }
 
-        return String(asset?.url || "").trim();
+        return normalizeMediaUrl(String(asset?.url || "").trim());
+    }
+
+    function normalizeMediaUrl(url) {
+        const normalized = String(url || "").trim();
+        if (!normalized) {
+            return "";
+        }
+
+        if (
+            /^(https?:|data:|blob:|\/)/i.test(normalized)
+        ) {
+            return normalized;
+        }
+
+        return `/${normalized.replace(/^\.?\/*/, "")}`;
     }
 
     function getDefaultImageUrl(kind = "general") {
@@ -101,7 +116,7 @@
     }
 
     function renderImageThumb(url, alt = "Preview") {
-        return `<img src="${escapeHTML(url || getDefaultImageUrl())}" alt="${escapeHTML(alt)}" class="table-thumbnail" loading="lazy" />`;
+        return `<img src="${escapeHTML(normalizeMediaUrl(url) || getDefaultImageUrl())}" alt="${escapeHTML(alt)}" class="table-thumbnail" loading="lazy" />`;
     }
 
     function setImagePreview(
@@ -117,7 +132,7 @@
 
         container.innerHTML = `
             <div class="image-preview-card">
-                <img src="${escapeHTML(imageUrl || fallbackUrl)}" alt="${escapeHTML(alt)}" loading="lazy" />
+                <img src="${escapeHTML(normalizeMediaUrl(imageUrl) || normalizeMediaUrl(fallbackUrl))}" alt="${escapeHTML(alt)}" loading="lazy" />
                 ${meta ? `<div class="asset-meta">${escapeHTML(meta)}</div>` : ""}
             </div>
         `;
@@ -530,7 +545,7 @@
             <div class="asset-summary-card">
                 ${
                     normalizedAsset.secure_url || normalizedAsset.url
-                        ? `<img class="asset-summary-image" src="${escapeHTML(normalizedAsset.secure_url || normalizedAsset.url)}" alt="${escapeHTML(normalizedAsset.alt_text || normalizedAsset.title || "Uploaded media")}" loading="lazy" />`
+                        ? `<img class="asset-summary-image" src="${escapeHTML(normalizeMediaUrl(normalizedAsset.secure_url || normalizedAsset.url))}" alt="${escapeHTML(normalizedAsset.alt_text || normalizedAsset.title || "Uploaded media")}" loading="lazy" />`
                         : ""
                 }
                 <div class="asset-summary-body">

@@ -520,15 +520,31 @@
                 }
 
                 const savedPage = await window.api.updateAboutPage(formData);
+                let nextPage = savedPage;
 
-                if (!portraitFile && this.state.current?.portrait_asset?.id) {
-                    await window.api.updateMediaAsset(this.state.current.portrait_asset.id, {
+                const currentPortraitAssetId =
+                    savedPage?.portrait_asset?.id || this.state.current?.portrait_asset?.id || null;
+
+                if (!portraitFile && currentPortraitAssetId) {
+                    const updatedPortraitAsset = await window.api.updateMediaAsset(
+                        currentPortraitAssetId,
+                        {
                         alt_text: this.portraitAltInput.value.trim() || `${founderName} portrait`,
                         title: this.portraitTitleInput.value.trim() || `${founderName} portrait`,
-                    });
+                        },
+                    );
+
+                    nextPage = {
+                        ...savedPage,
+                        portrait_asset: updatedPortraitAsset,
+                        portrait_asset_id: updatedPortraitAsset?.id || currentPortraitAssetId,
+                    };
                 }
 
-                this.state.current = await window.api.getAboutPage();
+                this.state.current =
+                    nextPage && typeof nextPage === "object"
+                        ? nextPage
+                        : await window.api.getAboutPage();
                 this.populateForm(this.state.current);
                 window.showAlert("About page content updated successfully.", "success");
             } catch (error) {

@@ -40,13 +40,13 @@
 
                             <form id="testimonialForm" novalidate>
                                 <div class="mb-3">
-                                    <label class="form-label" for="testimonialQuote">Quote</label>
+                                    <label class="form-label" for="testimonialQuote">Type testimony</label>
                                     <textarea class="form-control" id="testimonialQuote" required></textarea>
                                 </div>
 
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
-                                        <label class="form-label" for="testimonialAuthor">Author</label>
+                                        <label class="form-label" for="testimonialAuthor">Client name</label>
                                         <input class="form-control" id="testimonialAuthor" type="text" />
                                     </div>
                                     <div class="col-md-6 mb-3">
@@ -90,7 +90,7 @@
                                     <thead>
                                         <tr>
                                             <th>Quote</th>
-                                            <th>Author</th>
+                                            <th>Client name</th>
                                             <th>Status</th>
                                             <th>Updated</th>
                                             <th>Actions</th>
