@@ -107,10 +107,7 @@
         },
 
         refreshSessionInfo() {
-            const badge = document.getElementById("apiBaseBadge");
-            if (badge) {
-                badge.textContent = window.AdminUI.getApiBaseUrl();
-            }
+            return;
         },
 
         refreshBranding(forceRefresh = false) {
@@ -387,7 +384,6 @@
                             ${renderChecklistItem("Loading homepage", "Checking")}
                             ${renderChecklistItem("Loading About page", "Checking")}
                             ${renderChecklistItem("Loading projects", "Checking")}
-                            ${renderChecklistItem("API base URL", window.AdminUI.getApiBaseUrl())}
                         </div>
                     </article>
                 </section>
@@ -438,7 +434,6 @@
                     siteSettingsResult.status === "fulfilled" ? "is-live" : "is-danger",
                 )}
                 ${renderChecklistItem("Projects published", String(projectCount))}
-                ${renderChecklistItem("API base URL", window.AdminUI.getApiBaseUrl())}
             </div>
         `;
     }

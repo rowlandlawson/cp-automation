@@ -1,4 +1,18 @@
 (function () {
+    const LEGACY_SECTION_NAME = "about_page_intro";
+
+    function mapLegacySections(sections) {
+        return Array.isArray(sections)
+            ? sections.reduce((record, section) => {
+                if (section?.section_name) {
+                    record[section.section_name] = section;
+                }
+
+                return record;
+            }, {})
+            : {};
+    }
+
     async function syncMediaAsset({ fileInput, currentAsset, title, altText }) {
         const [file] = fileInput.files || [];
 
@@ -37,6 +51,7 @@
         static init() {
             this.state = {
                 current: null,
+                legacySections: {},
             };
             this.render();
             this.cacheElements();
@@ -294,6 +309,29 @@
             };
         }
 
+        static applyLegacySectionFallbacks(page) {
+            const legacyIntro = this.state.legacySections[LEGACY_SECTION_NAME]?.content || "";
+
+            return {
+                ...page,
+                page_subtitle: page.page_subtitle || legacyIntro,
+            };
+        }
+
+        static async syncLegacySections() {
+            const section = this.state.legacySections[LEGACY_SECTION_NAME];
+            const content = this.pageSubtitleInput.value.trim();
+
+            if (!section?.id || String(section.content || "") === content) {
+                return;
+            }
+
+            await window.api.updateContentSection(section.id, {
+                content,
+                section_name: section.section_name,
+            });
+        }
+
         static populateForm(page) {
             this.publishInput.checked = Boolean(page.is_published ?? true);
             this.slugInput.value = page.slug || "about";
@@ -428,13 +466,20 @@
             this.saveButton.disabled = true;
 
             try {
-                const page = await window.api.getAboutPage();
+                const [page, sections] = await Promise.all([
+                    window.api.getAboutPage(),
+                    window.api.getContentSections().catch(() => []),
+                ]);
+                this.state.legacySections = mapLegacySections(sections);
                 this.state.current = page;
-                this.populateForm(page);
+                this.populateForm(this.applyLegacySectionFallbacks(page));
             } catch (error) {
                 if (error.status === 404) {
+                    this.state.legacySections = mapLegacySections(
+                        await window.api.getContentSections().catch(() => []),
+                    );
                     this.state.current = this.createEmptyPage();
-                    this.populateForm(this.state.current);
+                    this.populateForm(this.applyLegacySectionFallbacks(this.state.current));
                     window.showAlert(
                         "About page content is empty. Save this form to create the singleton record.",
                         "info",
@@ -545,7 +590,8 @@
                     nextPage && typeof nextPage === "object"
                         ? nextPage
                         : await window.api.getAboutPage();
-                this.populateForm(this.state.current);
+                await this.syncLegacySections();
+                this.populateForm(this.applyLegacySectionFallbacks(this.state.current));
                 window.showAlert("About page content updated successfully.", "success");
             } catch (error) {
                 window.showAlert(error.message || "Failed to save About page content.", "danger");

@@ -1,4 +1,22 @@
 (function () {
+    const LEGACY_SECTION_NAMES = [
+        "home_hero",
+        "home_about_summary",
+        "home_contact_cta",
+    ];
+
+    function mapLegacySections(sections) {
+        return Array.isArray(sections)
+            ? sections.reduce((record, section) => {
+                if (section?.section_name) {
+                    record[section.section_name] = section;
+                }
+
+                return record;
+            }, {})
+            : {};
+    }
+
     async function syncMediaAsset({ fileInput, currentAsset, title, altText }) {
         const [file] = fileInput.files || [];
 
@@ -37,6 +55,7 @@
         static init() {
             this.state = {
                 current: null,
+                legacySections: {},
             };
             this.render();
             this.cacheElements();
@@ -389,6 +408,51 @@
             };
         }
 
+        static applyLegacySectionFallbacks(page) {
+            const legacySections = this.state.legacySections || {};
+
+            return {
+                ...page,
+                about_summary_subtitle:
+                    page.about_summary_subtitle || legacySections.home_about_summary?.content || "",
+                contact_cta_body:
+                    page.contact_cta_body || legacySections.home_contact_cta?.content || "",
+                hero_subheading:
+                    page.hero_subheading || legacySections.home_hero?.content || "",
+            };
+        }
+
+        static async syncLegacySections() {
+            const updates = [
+                {
+                    content: this.heroSubheadingInput.value.trim(),
+                    section: this.state.legacySections.home_hero,
+                },
+                {
+                    content: this.aboutSubtitleInput.value.trim(),
+                    section: this.state.legacySections.home_about_summary,
+                },
+                {
+                    content: this.contactBodyInput.value.trim(),
+                    section: this.state.legacySections.home_contact_cta,
+                },
+            ]
+                .filter(({ section }) => section?.id)
+                .filter(({ content, section }) => String(section.content || "") !== content)
+                .map(({ content, section }) =>
+                    window.api.updateContentSection(section.id, {
+                        content,
+                        section_name: section.section_name,
+                    }),
+                );
+
+            if (!updates.length) {
+                return;
+            }
+
+            await Promise.all(updates);
+        }
+
         static populateForm(page) {
             this.publishInput.checked = Boolean(page.is_published ?? true);
             this.slugInput.value = page.slug || "home";
@@ -569,13 +633,20 @@
             this.saveButton.disabled = true;
 
             try {
-                const page = await window.api.getHomePage();
+                const [page, sections] = await Promise.all([
+                    window.api.getHomePage(),
+                    window.api.getContentSections().catch(() => []),
+                ]);
+                this.state.legacySections = mapLegacySections(sections);
                 this.state.current = page;
-                this.populateForm(page);
+                this.populateForm(this.applyLegacySectionFallbacks(page));
             } catch (error) {
                 if (error.status === 404) {
+                    this.state.legacySections = mapLegacySections(
+                        await window.api.getContentSections().catch(() => []),
+                    );
                     this.state.current = this.createEmptyPage();
-                    this.populateForm(this.state.current);
+                    this.populateForm(this.applyLegacySectionFallbacks(this.state.current));
                     window.showAlert(
                         "Home page content is empty. Save this form to create the singleton record.",
                         "info",
@@ -666,8 +737,9 @@
                 };
 
                 const savedPage = await window.api.updateHomePage(payload);
+                await this.syncLegacySections();
                 this.state.current = savedPage;
-                this.populateForm(savedPage);
+                this.populateForm(this.applyLegacySectionFallbacks(savedPage));
                 window.showAlert("Home page content updated successfully.", "success");
             } catch (error) {
                 window.showAlert(error.message || "Failed to save home page content.", "danger");

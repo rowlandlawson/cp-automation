@@ -289,6 +289,7 @@ body.sidebar-open .sidebar-panel {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    min-width: 0;
 }
 
 .topbar {
@@ -348,6 +349,14 @@ body.sidebar-open .sidebar-panel {
 .main-content {
     flex: 1;
     padding: 1rem;
+    min-height: 0;
+    overflow-y: auto;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.main-content::-webkit-scrollbar {
+    display: none;
 }
 
 .alert-stack {

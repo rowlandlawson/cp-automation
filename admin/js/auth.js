@@ -84,7 +84,6 @@
         updateSessionUI() {
             const sessionUser = document.getElementById("sessionUser");
             const sessionRole = document.getElementById("sessionRole");
-            const apiBaseBadge = document.getElementById("apiBaseBadge");
 
             if (sessionUser) {
                 sessionUser.textContent = this.user?.username || "Guest";
@@ -92,10 +91,6 @@
 
             if (sessionRole) {
                 sessionRole.textContent = this.user?.role || "Administrator";
-            }
-
-            if (apiBaseBadge) {
-                apiBaseBadge.textContent = window.AdminUI.getApiBaseUrl();
             }
         }
 
