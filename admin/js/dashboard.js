@@ -122,9 +122,7 @@
             document.querySelectorAll("[data-page]").forEach((link) => {
                 link.addEventListener("click", (event) => {
                     event.preventDefault();
-                    this.loadPage(event.currentTarget.getAttribute("data-page"), true, {
-                        preserveSidebar: true,
-                    });
+                    this.loadPage(event.currentTarget.getAttribute("data-page"), true);
                 });
             });
 
